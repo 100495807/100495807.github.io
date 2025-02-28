@@ -53,7 +53,7 @@ function checkUserLocation() {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
 
-            const distance = getDistance(userLat, userLon, destinationCoords.lat, destinationCoords.lng);
+            const distance = calculateDistance(userLat, userLon, destinationCoords.lat, destinationCoords.lng);
             console.log(`Distancia al destino: ${distance.toFixed(2)} metros`);
 
             if (distance < 50) { // Notificación si está a menos de 50m
