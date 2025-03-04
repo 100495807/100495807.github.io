@@ -1,5 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     const img = document.getElementById("imagen");
+    if (!img) {
+        console.error("Elemento con ID 'imagen' no encontrado.");
+        return;
+    }
+
     let scale = 1, rotation = 0;
 
     // Acelerómetro: Mueve la imagen con inclinación
