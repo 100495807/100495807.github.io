@@ -9,6 +9,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 // Variables globales
 let destinationMarker = null;
 let destinationCoords = null;
+let userMarker = null;
 
 // Evento para que el usuario elija un destino en el mapa
 mymap.on('click', function(e) {
@@ -43,21 +44,30 @@ function calculateDistance(latA, lonA, latB, lonB) {
 
 // Obtener ubicación actual y verificar proximidad al destino
 function checkUserLocation() {
-    if (!destinationCoords) {
-        console.log("No hay destino seleccionado.");
-        return;
-    }
-
     if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
 
-            const distance = calculateDistance(userLat, userLon, destinationCoords.lat, destinationCoords.lng);
-            console.log(`Distancia al destino: ${distance.toFixed(2)} metros`);
+            // Si ya hay un marcador de usuario, lo eliminamos
+            if (userMarker) {
+                mymap.removeLayer(userMarker);
+            }
 
-            if (distance < 50) { // Notificación si está a menos de 50m
-                alert("¡Estás cerca de tu destino!");
+            // Agregar marcador en la ubicación actual del usuario
+            userMarker = L.marker([userLat, userLon]).addTo(mymap)
+                .bindPopup("Tu ubicación actual").openPopup();
+
+            // Centrar el mapa en la ubicación actual del usuario
+            mymap.setView([userLat, userLon], 15);
+
+            if (destinationCoords) {
+                const distance = calculateDistance(userLat, userLon, destinationCoords.lat, destinationCoords.lng);
+                console.log(`Distancia al destino: ${distance.toFixed(2)} metros`);
+
+                if (distance < 50) { // Notificación si está a menos de 50m
+                    alert("¡Estás cerca de tu destino!");
+                }
             }
         }, (error) => {
             switch(error.code) {
@@ -82,3 +92,6 @@ function checkUserLocation() {
 
 // Monitorear la ubicación del usuario cada 5 segundos
 setInterval(checkUserLocation, 5000);
+
+// Obtener la ubicación inicial del usuario al cargar la página
+checkUserLocation();
