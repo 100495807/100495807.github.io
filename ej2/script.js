@@ -1,3 +1,4 @@
+:/Users/Jorge/Documents/GitHub/100495807.github.io/ej2/script.js
 const movable = document.getElementById('movable');
 let startX = window.innerWidth / 2;
 let startY = window.innerHeight / 2;
