@@ -1,25 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const figura = document.getElementById("figura");
+    const img = document.getElementById("imagen");
     let scale = 1, rotation = 0;
     let initialDistance = 0;
     let initialAngle = 0;
 
     // Acelerómetro: Modifica el zoom según la inclinación
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", (event) => {
-            const pitch = event.beta;  // Inclinación adelante-atrás
-            const roll = event.gamma;  // Inclinación izquierda-derecha
-
-            if (pitch !== null && roll !== null) {
-                const tilt = Math.abs(pitch) + Math.abs(roll);
-                scale = 1 + tilt / 90;  // Ajusta la sensibilidad
-                figura.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
-            } else {
-                console.error("No se pudo obtener la orientación del dispositivo.");
-            }
+    if (window.Accelerometer) {
+        let sensor = new Accelerometer({ frequency: 60 });
+        sensor.addEventListener("reading", () => {
+            let tilt = Math.abs(sensor.x) + Math.abs(sensor.y);
+            scale = 1 + tilt / 20;
+            img.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
         });
-    } else {
-        console.error("DeviceOrientationEvent no está soportado en este dispositivo.");
+        sensor.start();
     }
 
     // Multitouch: Pinch (zoom) y rotación
@@ -42,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
             scale *= newDistance / initialDistance;
             rotation += newAngle - initialAngle;
 
-            figura.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
+            img.style.transform = `scale(${scale}) rotate(${rotation}deg)`;
 
             initialDistance = newDistance;
             initialAngle = newAngle;
