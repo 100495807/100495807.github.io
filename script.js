@@ -56,7 +56,7 @@ function checkUserLocation() {
 
             // Agregar marcador en la ubicación actual del usuario
             userMarker = L.marker([userLat, userLon]).addTo(mymap)
-                .bindPopup("Tu ubicación actual").openPopup();
+                .bindPopup("Usted está aquí").openPopup();
 
             // Centrar el mapa en la ubicación actual del usuario
             mymap.setView([userLat, userLon], 15);
