@@ -1,56 +1,45 @@
-:/Users/Jorge/Documents/GitHub/100495807.github.io/ej2/script.js
-const movable = document.getElementById('movable');
-let startX = window.innerWidth / 2;
-let startY = window.innerHeight / 2;
+document.addEventListener("DOMContentLoaded", () => {
+    const img = document.getElementById("imagen");
+    let scale = 1, rotation = 0;
+    
+    // Acelerómetro: Mueve la imagen con inclinación
+    window.addEventListener("deviceorientation", (event) => {
+        const pitch = event.beta;  // Inclinación adelante-atrás
+        const roll = event.gamma;  // Inclinación izquierda-derecha
+        
+        const x = roll * 2;  // Ajusta la sensibilidad
+        const y = pitch * 2;
 
-// Mover el elemento basado en la inclinación del dispositivo
-window.addEventListener('deviceorientation', (event) => {
-    const pitch = event.beta; // Inclinación hacia adelante/atrás
-    const roll = event.gamma; // Inclinación hacia izquierda/derecha
+        img.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rotation}deg)`;
+    });
 
-    // Calcular nueva posición
-    const newX = startX + roll * 2;
-    const newY = startY + pitch * 2;
+    // Multitouch: Pinch (zoom) y rotación
+    let initialDistance = 0;
+    let initialAngle = 0;
 
-    // Mover el elemento
-    movable.style.transform = `translate(${newX}px, ${newY}px)`;
+    document.addEventListener("touchstart", (e) => {
+        if (e.touches.length === 2) {
+            const dx = e.touches[1].clientX - e.touches[0].clientX;
+            const dy = e.touches[1].clientY - e.touches[0].clientY;
+            initialDistance = Math.hypot(dx, dy);
+            initialAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+        }
+    });
+
+    document.addEventListener("touchmove", (e) => {
+        if (e.touches.length === 2) {
+            const dx = e.touches[1].clientX - e.touches[0].clientX;
+            const dy = e.touches[1].clientY - e.touches[0].clientY;
+            const newDistance = Math.hypot(dx, dy);
+            const newAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+            scale *= newDistance / initialDistance;
+            rotation += newAngle - initialAngle;
+
+            img.style.transform = `translate(${roll * 2}px, ${pitch * 2}px) scale(${scale}) rotate(${rotation}deg)`;
+
+            initialDistance = newDistance;
+            initialAngle = newAngle;
+        }
+    });
 });
-
-// Variables para multitáctil
-let initialDistance = null;
-let initialAngle = null;
-
-// Capturar eventos multitáctiles
-movable.addEventListener('touchstart', (event) => {
-    if (event.touches.length === 2) {
-        initialDistance = getDistance(event.touches);
-        initialAngle = getAngle(event.touches);
-    }
-});
-
-movable.addEventListener('touchmove', (event) => {
-    if (event.touches.length === 2) {
-        const currentDistance = getDistance(event.touches);
-        const currentAngle = getAngle(event.touches);
-
-        // Detectar zoom (pinch)
-        const scale = currentDistance / initialDistance;
-        movable.style.transform += ` scale(${scale})`;
-
-        // Detectar rotación
-        const rotation = currentAngle - initialAngle;
-        movable.style.transform += ` rotate(${rotation}deg)`;
-    }
-});
-
-function getDistance(touches) {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.sqrt(dx * dx + dy * dy);
-}
-
-function getAngle(touches) {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
-    return Math.atan2(dy, dx) * (180 / Math.PI);
-}
