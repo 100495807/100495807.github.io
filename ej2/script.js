@@ -1,12 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
     const img = document.getElementById("imagen");
     let scale = 1, rotation = 0;
-    
+
     // Acelerómetro: Mueve la imagen con inclinación
     window.addEventListener("deviceorientation", (event) => {
+        console.log("Device Orientation Event:", event);
         const pitch = event.beta;  // Inclinación adelante-atrás
         const roll = event.gamma;  // Inclinación izquierda-derecha
-        
+
         const x = roll * 2;  // Ajusta la sensibilidad
         const y = pitch * 2;
 
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("touchstart", (e) => {
         if (e.touches.length === 2) {
+            console.log("Touch Start Event:", e);
             const dx = e.touches[1].clientX - e.touches[0].clientX;
             const dy = e.touches[1].clientY - e.touches[0].clientY;
             initialDistance = Math.hypot(dx, dy);
@@ -28,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("touchmove", (e) => {
         if (e.touches.length === 2) {
+            console.log("Touch Move Event:", e);
             const dx = e.touches[1].clientX - e.touches[0].clientX;
             const dy = e.touches[1].clientY - e.touches[0].clientY;
             const newDistance = Math.hypot(dx, dy);
@@ -36,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
             scale *= newDistance / initialDistance;
             rotation += newAngle - initialAngle;
 
-            img.style.transform = `translate(${roll * 2}px, ${pitch * 2}px) scale(${scale}) rotate(${rotation}deg)`;
+            img.style.transform = `translate(${dx}px, ${dy}px) scale(${scale}) rotate(${rotation}deg)`;
 
             initialDistance = newDistance;
             initialAngle = newAngle;
