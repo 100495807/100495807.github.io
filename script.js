@@ -90,8 +90,8 @@ function checkUserLocation() {
     }
 }
 
-// Monitorear la ubicación del usuario cada 5 segundos
-setInterval(checkUserLocation, 5000);
-
 // Obtener la ubicación inicial del usuario al cargar la página
 checkUserLocation();
+
+// Monitorear la ubicación del usuario cada 5 segundos
+setInterval(checkUserLocation, 5000);
