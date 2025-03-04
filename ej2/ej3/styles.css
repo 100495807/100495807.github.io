@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden;
+    margin: 0;
+}
+
+#contenedor {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#imagen {
+    width: 150px;
+    height: 150px;
+    transition: transform 0.1s ease-out;
+    touch-action: none; /* Evita el zoom por defecto del navegador */
+}

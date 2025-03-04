@@ -9,13 +9,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Acelerómetro: Mueve la imagen con inclinación
     window.addEventListener("deviceorientation", (event) => {
+        console.log("Device Orientation Event:", event);
         const pitch = event.beta;  // Inclinación adelante-atrás
         const roll = event.gamma;  // Inclinación izquierda-derecha
 
-        const x = roll * 2;  // Ajusta la sensibilidad
-        const y = pitch * 2;
+        if (pitch !== null && roll !== null) {
+            const x = roll * 2;  // Ajusta la sensibilidad
+            const y = pitch * 2;
 
-        img.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rotation}deg)`;
+            img.style.transform = `translate(${x}px, ${y}px) scale(${scale}) rotate(${rotation}deg)`;
+        } else {
+            console.error("No se pudo obtener la orientación del dispositivo.");
+        }
     });
 
     // Multitouch: Pinch (zoom) y rotación
