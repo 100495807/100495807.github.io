@@ -17,9 +17,10 @@ body {
     align-items: center;
 }
 
-#imagen {
+#figura {
     width: 150px;
     height: 150px;
+    background-color: red;
     transition: transform 0.1s ease-out;
     touch-action: none; /* Evita el zoom por defecto del navegador */
 }
