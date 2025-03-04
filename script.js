@@ -60,7 +60,20 @@ function checkUserLocation() {
                 alert("¡Estás cerca de tu destino!");
             }
         }, (error) => {
-            console.error("Error obteniendo la ubicación:", error);
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    console.error("Permiso de geolocalización denegado.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.error("Información de ubicación no disponible.");
+                    break;
+                case error.TIMEOUT:
+                    console.error("La solicitud de geolocalización ha caducado.");
+                    break;
+                case error.UNKNOWN_ERROR:
+                    console.error("Error desconocido.");
+                    break;
+            }
         });
     } else {
         console.error("Geolocalización no soportada en este navegador.");
